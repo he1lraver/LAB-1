@@ -257,14 +257,14 @@ class ImageProcessing:
         
         # Параметры окружностей
         min_radius = max(10, min(height, width) // 30)
-        max_radius = min(120, min(height, width) // 4)
+        max_radius = min(150, min(height, width) // 4)
         
         # Собираем точки границ
         edge_points = np.argwhere(edges_binary)
         
         # Ограничиваем количество точек для производительности
-        if len(edge_points) > 5000:
-            step = len(edge_points) // 5000
+        if len(edge_points) > 6000:
+            step = len(edge_points) // 6000
             edge_points = edge_points[::step]
         
         # Создаем аккумулятор
@@ -273,7 +273,7 @@ class ImageProcessing:
         # Голосование в пространстве Хафа
         for y, x in edge_points:
             for r in range(min_radius, max_radius + 1):
-                for angle in range(0, 360, 3):
+                for angle in range(0, 360, 2):
                     rad = math.radians(angle)
                     a = int(x + r * math.cos(rad))
                     b = int(y + r * math.sin(rad))
@@ -283,7 +283,7 @@ class ImageProcessing:
         
         # Поиск кандидатов
         circles = []
-        vote_threshold = 0.17 * accumulator.max()
+        vote_threshold = 0.22 * accumulator.max()
         
         for r_idx, r in enumerate(range(min_radius, max_radius + 1)):
             for y in range(height):
@@ -300,14 +300,14 @@ class ImageProcessing:
             for existing in final_circles:
                 x2, y2, r2 = existing
                 distance = math.sqrt((x - x2)**2 + (y - y2)**2)
-                if distance < 30 and abs(r - r2) < max(5, r * 0.3):
+                if distance < 25 and abs(r - r2) < max(5, r * 0.2):
                     duplicate = True
                     break
             
             if not duplicate:
                 final_circles.append((x, y, r))
             
-            if len(final_circles) >= 30:
+            if len(final_circles) >= 15:
                 break
         
         # Рисуем результат
@@ -323,19 +323,31 @@ class ImageProcessing:
 
     def _draw_circle(self, image: np.ndarray, center_x: int, center_y: int, 
                     radius: int) -> np.ndarray:
-        """Рисует окружность на изображении."""
+        """Рисует окружность с двойной обводкой для лучшей видимости."""
         result = image.copy()
         height, width = image.shape[:2]
         
-        green_color = (0, 255, 0)  # Зеленый цвет
+        green_color = (0, 255, 0)  # Зеленый цвет в BGR
         
-        # Рисуем контур
-        for angle in np.linspace(0, 2 * np.pi, 100):
-            x = int(center_x + radius * np.cos(angle))
-            y = int(center_y + radius * np.sin(angle))
-            
-            if 0 <= x < width and 0 <= y < height:
-                result[y, x] = green_color
+        # Рисуем основную окружность
+        for r_offset in range(-1, 2):  # Три контура для толщины
+            current_radius = radius + r_offset
+            for angle in np.linspace(0, 2 * np.pi, max(150, current_radius * 2)):
+                x = int(center_x + current_radius * np.cos(angle))
+                y = int(center_y + current_radius * np.sin(angle))
+                
+                if 0 <= x < width and 0 <= y < height:
+                    result[y, x] = green_color
+        
+        # Дополнительные точки для большей четкости на основных направлениях
+        for angle in [0, 45, 90, 135, 180, 225, 270, 315]:
+            rad = math.radians(angle)
+            for r in range(radius - 2, radius + 3):
+                x = int(center_x + r * math.cos(rad))
+                y = int(center_y + r * math.sin(rad))
+                
+                if 0 <= x < width and 0 <= y < height:
+                    result[y, x] = green_color
         
         return result
 
