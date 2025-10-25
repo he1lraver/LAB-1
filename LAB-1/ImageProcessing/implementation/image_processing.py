@@ -7,7 +7,6 @@
 import time
 import math
 import numpy as np
-from scipy.ndimage import convolve
 from typing import Tuple
 
 
@@ -19,16 +18,44 @@ class ImageProcessing:
     def __init__(self):
         self.optimization_enabled = True
 
-    def _convolution(self, image: np.ndarray, kernel: np.ndarray) -> np.ndarray:
+    def convolution(image_array: np.ndarray, kernel: np.ndarray) -> np.ndarray:
         """
-        Оптимизированная свёртка с использованием scipy.convolve.
+        Применение свёртки изображения с заданным ядром.
+        
+        Args:
+            image_array: NumPy array изображения
+            kernel: NumPy array ядра свёртки (нечётных размеров)
+        
+        Returns:
+            NumPy array результата свёртки
         """
-        start_time = time.time()
+        if len(kernel.shape) != 2:
+            raise ValueError("Ядро должно быть двумерным")
         
-        result = convolve(image.astype(np.float32), kernel, mode='constant', cval=0.0)
+        if kernel.shape[0] % 2 == 0 or kernel.shape[1] % 2 == 0:
+            raise ValueError("Размеры ядра должны быть нечётными")
         
-        end_time = time.time()
-        print(f"Свёртка выполнена за {end_time - start_time:.4f} секунд")
+        kernel_height, kernel_width = kernel.shape
+        pad_height = kernel_height // 2
+        pad_width = kernel_width // 2
+        
+        padded_image = np.pad(
+            image_array,
+            ((pad_height, pad_height), (pad_width, pad_width)),
+            mode='reflect',
+        )
+        
+        height, width = image_array.shape
+        result = np.zeros_like(image_array, dtype=np.float64)
+        kernel_flipped = np.flipud(np.fliplr(kernel))
+        
+        for i_idx in range(height):
+            for j_idx in range(width):
+                region = padded_image[
+                    i_idx:i_idx + kernel_height,
+                    j_idx:j_idx + kernel_width
+                ]
+                result[i_idx, j_idx] = np.sum(region * kernel_flipped)
         
         return result
 
@@ -365,7 +392,3 @@ class ImageProcessing:
     def rgb_to_grayscale(self, image: np.ndarray) -> np.ndarray:
         """Публичный метод преобразования в grayscale."""
         return self._rgb_to_grayscale(image)
-
-    def gamma_correction(self, image: np.ndarray, gamma: float) -> np.ndarray:
-        """Публичный метод гамма-коррекции."""
-        return self._gamma_correction(image, gamma)
