@@ -1,73 +1,105 @@
-"""
-Модуль image_processing.py
-
-Улучшенная реализация интерфейса IImageProcessing.
-"""
-
 import time
 import math
 import numpy as np
-from scipy.ndimage import convolve
 from typing import Tuple
 
 
 class ImageProcessing:
     """
     Реализация обработки изображений.
+    Включает методы для свёртки, преобразования цветового пространства
+    и обнаружения особенностей изображения.
     """
-
+    
     def __init__(self):
+        """Инициализирует обработчик изображений."""
         self.optimization_enabled = True
-
-    def _convolution(self, image: np.ndarray, kernel: np.ndarray) -> np.ndarray:
+    
+    def _convolution(self, image_array: np.ndarray, kernel: np.ndarray) -> np.ndarray:
         """
-        Оптимизированная свёртка с использованием scipy.convolve.
+        Применение свёртки изображения с заданным ядром (NumPy реализация).
+        
+        Args:
+            image_array: NumPy array изображения (2D для граyscale)
+            kernel: NumPy array ядра свёртки (нечётных размеров)
+        
+        Returns:
+            NumPy array результата свёртки
+            
+        Raises:
+            ValueError: Если ядро не двумерное или не нечётного размера
         """
-        start_time = time.time()
+        if len(kernel.shape) != 2:
+            raise ValueError("Ядро должно быть двумерным")
         
-        result = convolve(image.astype(np.float32), kernel, mode='constant', cval=0.0)
+        if kernel.shape[0] % 2 == 0 or kernel.shape[1] % 2 == 0:
+            raise ValueError("Размеры ядра должны быть нечётными")
         
-        end_time = time.time()
-        print(f"Свёртка выполнена за {end_time - start_time:.4f} секунд")
+        kernel_height, kernel_width = kernel.shape
+        pad_height = kernel_height // 2
+        pad_width = kernel_width // 2
+        
+        # Отражающее заполнение (reflection padding)
+        padded_image = np.pad(
+            image_array,
+            ((pad_height, pad_height), (pad_width, pad_width)),
+            mode='reflect',
+        )
+        
+        height, width = image_array.shape
+        result = np.zeros_like(image_array, dtype=np.float64)
+        kernel_flipped = np.flipud(np.fliplr(kernel))
+        
+        # Выполняем свёртку
+        for i_idx in range(height):
+            for j_idx in range(width):
+                region = padded_image[
+                    i_idx:i_idx + kernel_height,
+                    j_idx:j_idx + kernel_width
+                ]
+                result[i_idx, j_idx] = np.sum(region * kernel_flipped)
         
         return result
-
+    
     def _rgb_to_grayscale(self, image: np.ndarray) -> np.ndarray:
         """
-        Преобразование в grayscale.
+        Преобразование RGB изображения в grayscale.
+        
+        Args:
+            image: RGB изображение (высота, ширина, 3 канала)
+            
+        Returns:
+            Grayscale изображение (высота, ширина)
+            
+        Raises:
+            ValueError: Если изображение не RGB
         """
         if len(image.shape) != 3 or image.shape[2] != 3:
-            raise ValueError("Изображение должно быть RGB")
+            raise ValueError("Изображение должно быть RGB (3 канала)")
         
         return np.dot(image[..., :3], [0.299, 0.587, 0.114]).astype(np.uint8)
-
-    def _gamma_correction(self, image: np.ndarray, gamma: float) -> np.ndarray:
-        """
-        Применяет гамма-коррекцию к изображению.
-        """
-        start_time = time.time()
-        
-        if gamma <= 0:
-            raise ValueError("Гамма должна быть положительным числом")
-        
-        image_normalized = image.astype(np.float32) / 255.0
-        corrected_image = np.power(image_normalized, gamma)
-        result = (corrected_image * 255).astype(np.uint8)
-        
-        end_time = time.time()
-        print(f"Гамма-коррекция выполнена за {end_time - start_time:.4f} секунд")
-        
-        return result
-
+    
     def _sobel_operators(self) -> Tuple[np.ndarray, np.ndarray]:
-        """Возвращает операторы Собеля."""
+        """
+        Возвращает операторы Собеля для обнаружения граней.
+        
+        Returns:
+            Кортеж (sobel_x, sobel_y) - ядра для вычисления градиентов
+        """
         sobel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.float32)
         sobel_y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]], dtype=np.float32)
         return sobel_x, sobel_y
-
+    
     def _non_maximum_suppression(self, magnitude: np.ndarray, direction: np.ndarray) -> np.ndarray:
         """
         Подавление немаксимумов для тонких границ.
+        
+        Args:
+            magnitude: Величина градиента
+            direction: Направление градиента в радианах
+            
+        Returns:
+            Подавленные границы
         """
         height, width = magnitude.shape
         suppressed = np.zeros_like(magnitude)
@@ -75,31 +107,41 @@ class ImageProcessing:
         direction = direction * (180.0 / np.pi)
         direction[direction < 0] += 180
         
-        for i in range(1, height-1):
-            for j in range(1, width-1):
+        for i in range(1, height - 1):
+            for j in range(1, width - 1):
                 angle = direction[i, j]
                 
                 if (0 <= angle < 22.5) or (157.5 <= angle <= 180):
-                    neighbors = [magnitude[i, j-1], magnitude[i, j+1]]
+                    neighbors = [magnitude[i, j - 1], magnitude[i, j + 1]]
                 elif 22.5 <= angle < 67.5:
-                    neighbors = [magnitude[i-1, j-1], magnitude[i+1, j+1]]
+                    neighbors = [magnitude[i - 1, j - 1], magnitude[i + 1, j + 1]]
                 elif 67.5 <= angle < 112.5:
-                    neighbors = [magnitude[i-1, j], magnitude[i+1, j]]
+                    neighbors = [magnitude[i - 1, j], magnitude[i + 1, j]]
                 else:
-                    neighbors = [magnitude[i-1, j+1], magnitude[i+1, j-1]]
+                    neighbors = [magnitude[i - 1, j + 1], magnitude[i + 1, j - 1]]
                 
                 if magnitude[i, j] >= max(neighbors):
                     suppressed[i, j] = magnitude[i, j]
         
         return suppressed
-
+    
     def edge_detection(self, image: np.ndarray) -> np.ndarray:
         """
-        Обнаружение границ с улучшенным алгоритмом Кэнни.
+        Обнаружение границ с использованием алгоритма Собеля.
+        
+        Args:
+            image: RGB или grayscale изображение
+            
+        Returns:
+            Бинарное изображение с обнаруженными границами (0 или 255)
         """
         start_time = time.time()
         
-        gray = self._rgb_to_grayscale(image)
+        # Преобразуем в grayscale
+        if len(image.shape) == 3:
+            gray = self._rgb_to_grayscale(image)
+        else:
+            gray = image
         
         # Вычисляем градиенты Собеля
         sobel_x, sobel_y = self._sobel_operators()
@@ -118,17 +160,47 @@ class ImageProcessing:
         edges = (suppressed > threshold).astype(np.uint8) * 255
         
         end_time = time.time()
-        print(f"Обнаружение границ выполнено за {end_time - start_time:.4f} секунд")
+        print(f"  Обнаружение граней выполнено за {end_time - start_time:.4f} секунд")
         
         return edges
-
+    
+    def library_edge_detection(self, image: np.ndarray) -> np.ndarray:
+        """
+        Обнаружение границ с использованием алгоритма Кэнни (OpenCV).
+        
+        Args:
+            image: RGB или grayscale изображение
+            
+        Returns:
+            Бинарное изображение с обнаруженными границами
+        """
+        import cv2
+        
+        # Преобразуем в grayscale
+        if len(image.shape) == 3:
+            gray = self._rgb_to_grayscale(image)
+        else:
+            gray = image
+        
+        # Применяем алгоритм Кэнни
+        edges = cv2.Canny(gray, 100, 200)
+        
+        return edges
+    
     def corner_detection(self, image: np.ndarray) -> np.ndarray:
         """
         Детектор углов на основе алгоритма Харриса.
-        Углы отображаются красным цветом.
+        Углы отображаются красным цветом на оригинальном изображении.
+        
+        Args:
+            image: RGB изображение
+            
+        Returns:
+            RGB изображение с отмеченными углами (красные крестики)
         """
         start_time = time.time()
         
+        # Преобразуем в grayscale
         if len(image.shape) == 3:
             gray = self._rgb_to_grayscale(image)
         else:
@@ -150,7 +222,7 @@ class ImageProcessing:
         Sy2 = self._convolution(Iy2, window)
         Sxy = self._convolution(Ixy, window)
         
-        # Вычисляем меру угла
+        # Вычисляем меру угла (Harris corner measure)
         k = 0.1
         det_M = Sx2 * Sy2 - Sxy * Sxy
         trace_M = Sx2 + Sy2
@@ -171,22 +243,29 @@ class ImageProcessing:
         corners_binary = self._non_maximum_suppression_corners(R_normalized, threshold=corner_threshold)
         
         # Рисуем углы красным цветом
-        result_image = image.copy()
+        result_image = image.copy().astype(np.uint8)
         corner_coords = np.argwhere(corners_binary)
         
         for y, x in corner_coords:
             result_image = self._draw_red_corner(result_image, x, y)
         
         end_time = time.time()
-        print(f"Обнаружение углов выполнено за {end_time - start_time:.4f} секунд")
-        print(f"Найдено углов: {len(corner_coords)}")
+        print(f"  Обнаружение углов выполнено за {end_time - start_time:.4f} секунд")
+        print(f"  Найдено углов: {len(corner_coords)}")
         
         return result_image
-
+    
     def _non_maximum_suppression_corners(self, corner_response: np.ndarray, 
-                                       threshold: float = 0.1) -> np.ndarray:
+                                        threshold: float = 0.1) -> np.ndarray:
         """
         Подавление немаксимумов для углов.
+        
+        Args:
+            corner_response: Ответ детектора углов
+            threshold: Пороговое значение
+            
+        Returns:
+            Бинарное изображение с обнаруженными углами
         """
         height, width = corner_response.shape
         is_corner = np.zeros_like(corner_response, dtype=bool)
@@ -214,15 +293,23 @@ class ImageProcessing:
                     is_corner[i, j] = True
         
         return is_corner
-
+    
     def _draw_red_corner(self, image: np.ndarray, x: int, y: int) -> np.ndarray:
         """
         Рисует красный маркер угла на изображении.
+        
+        Args:
+            image: RGB изображение
+            x: X координата угла
+            y: Y координата угла
+            
+        Returns:
+            Изображение с нарисованным уголком
         """
         result = image.copy()
         height, width = image.shape[:2]
         
-        red_color = (0, 0, 255)  # Красный цвет в BGR
+        red_color = np.array([255, 0, 0], dtype=np.uint8)  # Красный цвет в RGB
         size = 3
         
         # Рисуем крестик
@@ -240,13 +327,21 @@ class ImageProcessing:
                 result[py, px] = red_color
         
         return result
-
+    
     def circle_detection(self, image: np.ndarray) -> np.ndarray:
         """
         Обнаружение окружностей с помощью преобразования Хафа.
+        Окружности отображаются зелёным цветом на оригинальном изображении.
+        
+        Args:
+            image: RGB изображение
+            
+        Returns:
+            RGB изображение с отмеченными окружностями
         """
         start_time = time.time()
         
+        # Преобразуем в grayscale
         gray = self._rgb_to_grayscale(image)
         
         # Обнаружение границ
@@ -311,23 +406,34 @@ class ImageProcessing:
                 break
         
         # Рисуем результат
-        result_image = image.copy()
+        result_image = image.copy().astype(np.uint8)
         for x, y, r in final_circles:
             result_image = self._draw_circle(result_image, x, y, r)
         
         end_time = time.time()
-        print(f"Обнаружение окружностей выполнено за {end_time - start_time:.4f} секунд")
-        print(f"Найдено окружностей: {len(final_circles)}")
+        print(f"  Обнаружение окружностей выполнено за {end_time - start_time:.4f} секунд")
+        print(f"  Найдено окружностей: {len(final_circles)}")
         
         return result_image
-
+    
     def _draw_circle(self, image: np.ndarray, center_x: int, center_y: int, 
                     radius: int) -> np.ndarray:
-        """Рисует окружность с двойной обводкой для лучшей видимости."""
+        """
+        Рисует окружность с двойной обводкой для лучшей видимости.
+        
+        Args:
+            image: RGB изображение
+            center_x: X координата центра
+            center_y: Y координата центра
+            radius: Радиус окружности
+            
+        Returns:
+            Изображение с нарисованной окружностью
+        """
         result = image.copy()
         height, width = image.shape[:2]
         
-        green_color = (0, 255, 0)  # Зеленый цвет в BGR
+        green_color = np.array([0, 255, 0], dtype=np.uint8)  # Зелёный цвет в RGB
         
         # Рисуем основную окружность
         for r_offset in range(-1, 2):  # Три контура для толщины
@@ -350,22 +456,44 @@ class ImageProcessing:
                     result[y, x] = green_color
         
         return result
-
+    
     def _gaussian_kernel(self, size: int, sigma: float) -> np.ndarray:
-        """Создает гауссово ядро."""
+        """
+        Создает гауссово ядро для сглаживания.
+        
+        Args:
+            size: Размер ядра (нечётный)
+            sigma: Стандартное отклонение
+            
+        Returns:
+            Нормализованное гауссово ядро
+        """
         ax = np.linspace(-(size - 1) / 2., (size - 1) / 2., size)
         xx, yy = np.meshgrid(ax, ax)
         kernel = np.exp(-0.5 * (xx**2 + yy**2) / sigma**2)
         return kernel / np.sum(kernel)
-
+    
     def convolution(self, image: np.ndarray, kernel: np.ndarray) -> np.ndarray:
-        """Публичный метод свёртки."""
+        """
+        Публичный метод свёртки.
+        
+        Args:
+            image: Входное изображение
+            kernel: Ядро для свёртки
+            
+        Returns:
+            Результат свёртки
+        """
         return self._convolution(image, kernel)
-
+    
     def rgb_to_grayscale(self, image: np.ndarray) -> np.ndarray:
-        """Публичный метод преобразования в grayscale."""
+        """
+        Публичный метод преобразования в grayscale.
+        
+        Args:
+            image: RGB изображение
+            
+        Returns:
+            Grayscale изображение
+        """
         return self._rgb_to_grayscale(image)
-
-    def gamma_correction(self, image: np.ndarray, gamma: float) -> np.ndarray:
-        """Публичный метод гамма-коррекции."""
-        return self._gamma_correction(image, gamma)
