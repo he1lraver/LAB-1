@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+results/
+results_async/
+test_images/
+.DS_Store
+Thumbs.db
