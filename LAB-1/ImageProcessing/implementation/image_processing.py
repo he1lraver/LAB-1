@@ -41,24 +41,6 @@ class ImageProcessing:
         
         return np.dot(image[..., :3], [0.299, 0.587, 0.114]).astype(np.uint8)
 
-    def _gamma_correction(self, image: np.ndarray, gamma: float) -> np.ndarray:
-        """
-        Применяет гамма-коррекцию к изображению.
-        """
-        start_time = time.time()
-        
-        if gamma <= 0:
-            raise ValueError("Гамма должна быть положительным числом")
-        
-        image_normalized = image.astype(np.float32) / 255.0
-        corrected_image = np.power(image_normalized, gamma)
-        result = (corrected_image * 255).astype(np.uint8)
-        
-        end_time = time.time()
-        print(f"Гамма-коррекция выполнена за {end_time - start_time:.4f} секунд")
-        
-        return result
-
     def _sobel_operators(self) -> Tuple[np.ndarray, np.ndarray]:
         """Возвращает операторы Собеля."""
         sobel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.float32)
@@ -365,7 +347,3 @@ class ImageProcessing:
     def rgb_to_grayscale(self, image: np.ndarray) -> np.ndarray:
         """Публичный метод преобразования в grayscale."""
         return self._rgb_to_grayscale(image)
-
-    def gamma_correction(self, image: np.ndarray, gamma: float) -> np.ndarray:
-        """Публичный метод гамма-коррекции."""
-        return self._gamma_correction(image, gamma)
