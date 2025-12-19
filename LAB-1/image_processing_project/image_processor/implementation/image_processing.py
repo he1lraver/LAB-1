@@ -1,0 +1,373 @@
+"""
+Модуль image_processing.py
+
+Улучшенная реализация интерфейса IImageProcessing с логированием.
+"""
+
+import time
+import math
+import numpy as np
+from scipy.ndimage import convolve
+from typing import Tuple
+from image_processor.logging_config import get_logger
+
+
+
+class ImageProcessing:
+    """
+    Реализация обработки изображений с логированием всех операций.
+    """
+
+    def __init__(self):
+        self.optimization_enabled = True
+        self.logger = get_logger()
+        self.logger.debug("ImageProcessing instance created")
+
+    def _convolution(self, image: np.ndarray, kernel: np.ndarray) -> np.ndarray:
+        """
+        Оптимизированная свёртка с использованием scipy.convolve.
+        """
+        self.logger.debug(f"Convolution started. Image shape: {image.shape}, kernel shape: {kernel.shape}")
+        start_time = time.time()
+
+        try:
+            result = convolve(image.astype(np.float32), kernel, mode='constant', cval=0.0)
+            elapsed = time.time() - start_time
+            self.logger.debug(f"Convolution completed in {elapsed:.4f} seconds")
+            return result
+        except Exception as e:
+            self.logger.error(f"Convolution failed: {e}")
+            raise
+
+    def _rgb_to_grayscale(self, image: np.ndarray) -> np.ndarray:
+        """
+        Преобразование в grayscale с логированием.
+        """
+        self.logger.debug(f"RGB to grayscale conversion started. Image shape: {image.shape}")
+
+        try:
+            if len(image.shape) != 3 or image.shape[2] != 3:
+                raise ValueError("Image must be RGB")
+
+            result = np.dot(image[..., :3], [0.299, 0.587, 0.114]).astype(np.uint8)
+            self.logger.debug(f"RGB to grayscale conversion completed. Result shape: {result.shape}")
+            return result
+        except Exception as e:
+            self.logger.error(f"RGB to grayscale conversion failed: {e}")
+            raise
+
+    def _gamma_correction(self, image: np.ndarray, gamma: float) -> np.ndarray:
+        """
+        Применяет гамма-коррекцию к изображению с логированием.
+        """
+        self.logger.debug(f"Gamma correction started. Gamma value: {gamma}")
+        start_time = time.time()
+
+        try:
+            if gamma <= 0:
+                raise ValueError("Gamma must be positive")
+
+            image_normalized = image.astype(np.float32) / 255.0
+            corrected_image = np.power(image_normalized, gamma)
+            result = (corrected_image * 255).astype(np.uint8)
+
+            elapsed = time.time() - start_time
+            self.logger.debug(f"Gamma correction completed in {elapsed:.4f} seconds")
+            return result
+        except Exception as e:
+            self.logger.error(f"Gamma correction failed: {e}")
+            raise
+
+    def _sobel_operators(self) -> Tuple[np.ndarray, np.ndarray]:
+        """Возвращает операторы Собеля."""
+        sobel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.float32)
+        sobel_y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]], dtype=np.float32)
+        return sobel_x, sobel_y
+
+    def _non_maximum_suppression(self, magnitude: np.ndarray, direction: np.ndarray) -> np.ndarray:
+        """
+        Подавление немаксимумов для тонких границ с логированием.
+        """
+        self.logger.debug("Non-maximum suppression started")
+
+        height, width = magnitude.shape
+        suppressed = np.zeros_like(magnitude)
+        direction = direction * (180.0 / np.pi)
+        direction[direction < 0] += 180
+
+        for i in range(1, height - 1):
+            for j in range(1, width - 1):
+                angle = direction[i, j]
+                if (0 <= angle < 22.5) or (157.5 <= angle <= 180):
+                    neighbors = [magnitude[i, j - 1], magnitude[i, j + 1]]
+                elif 22.5 <= angle < 67.5:
+                    neighbors = [magnitude[i - 1, j - 1], magnitude[i + 1, j + 1]]
+                elif 67.5 <= angle < 112.5:
+                    neighbors = [magnitude[i - 1, j], magnitude[i + 1, j]]
+                else:
+                    neighbors = [magnitude[i - 1, j + 1], magnitude[i + 1, j - 1]]
+
+                if magnitude[i, j] >= max(neighbors):
+                    suppressed[i, j] = magnitude[i, j]
+
+        self.logger.debug("Non-maximum suppression completed")
+        return suppressed
+
+    def edge_detection(self, image: np.ndarray) -> np.ndarray:
+        """
+        Обнаружение границ с логированием.
+        """
+        self.logger.debug("Edge detection (Canny) started")
+        start_time = time.time()
+
+        try:
+            gray = self._rgb_to_grayscale(image)
+
+            sobel_x, sobel_y = self._sobel_operators()
+            grad_x = self._convolution(gray.astype(np.float32), sobel_x)
+            grad_y = self._convolution(gray.astype(np.float32), sobel_y)
+
+            magnitude = np.sqrt(grad_x ** 2 + grad_y ** 2)
+            direction = np.arctan2(grad_y, grad_x)
+
+            suppressed = self._non_maximum_suppression(magnitude, direction)
+
+            threshold = 0.1 * np.max(suppressed)
+            edges = (suppressed > threshold).astype(np.uint8) * 255
+
+            elapsed = time.time() - start_time
+            self.logger.debug(f"Edge detection completed in {elapsed:.4f} seconds")
+            return edges
+        except Exception as e:
+            self.logger.error(f"Edge detection failed: {e}")
+            raise
+
+    def corner_detection(self, image: np.ndarray) -> np.ndarray:
+        """
+        Детектор углов на основе алгоритма Харриса с логированием.
+        """
+        self.logger.debug("Corner detection (Harris) started")
+        start_time = time.time()
+
+        try:
+            if len(image.shape) == 3:
+                gray = self._rgb_to_grayscale(image)
+            else:
+                gray = image
+
+            sobel_x, sobel_y = self._sobel_operators()
+            Ix = self._convolution(gray.astype(np.float32), sobel_x)
+            Iy = self._convolution(gray.astype(np.float32), sobel_y)
+
+            Ix2 = Ix * Ix
+            Iy2 = Iy * Iy
+            Ixy = Ix * Iy
+
+            window = self._gaussian_kernel(5, 1.5)
+            Sx2 = self._convolution(Ix2, window)
+            Sy2 = self._convolution(Iy2, window)
+            Sxy = self._convolution(Ixy, window)
+
+            k = 0.1
+            det_M = Sx2 * Sy2 - Sxy * Sxy
+            trace_M = Sx2 + Sy2
+            R = det_M - k * (trace_M ** 2)
+
+            R_positive = np.maximum(R, 0)
+            if R_positive.max() > 0:
+                R_normalized = R_positive / R_positive.max()
+            else:
+                R_normalized = R_positive
+
+            mean_response = np.mean(R_normalized)
+            std_response = np.std(R_normalized)
+            corner_threshold = mean_response + 1.5 * std_response
+
+            corners_binary = self._non_maximum_suppression_corners(R_normalized, threshold=corner_threshold)
+
+            result_image = image.copy()
+            corner_coords = np.argwhere(corners_binary)
+
+            for y, x in corner_coords:
+                result_image = self._draw_red_corner(result_image, x, y)
+
+            elapsed = time.time() - start_time
+            self.logger.debug(f"Corner detection completed in {elapsed:.4f} seconds. Found {len(corner_coords)} corners")
+            return result_image
+        except Exception as e:
+            self.logger.error(f"Corner detection failed: {e}")
+            raise
+
+    def _non_maximum_suppression_corners(self, corner_response: np.ndarray,
+                                         threshold: float = 0.1) -> np.ndarray:
+        """
+        Подавление немаксимумов для углов.
+        """
+        height, width = corner_response.shape
+        is_corner = np.zeros_like(corner_response, dtype=bool)
+
+        for i in range(1, height - 1):
+            for j in range(1, width - 1):
+                current_val = corner_response[i, j]
+                if current_val < threshold:
+                    continue
+
+                is_local_max = True
+                for di in range(-1, 2):
+                    for dj in range(-1, 2):
+                        if di == 0 and dj == 0:
+                            continue
+                        if corner_response[i + di, j + dj] > current_val:
+                            is_local_max = False
+                            break
+                    if not is_local_max:
+                        break
+
+                if is_local_max:
+                    is_corner[i, j] = True
+
+        return is_corner
+
+    def _draw_red_corner(self, image: np.ndarray, x: int, y: int) -> np.ndarray:
+        """
+        Рисует красный маркер угла на изображении.
+        """
+        result = image.copy()
+        height, width = image.shape[:2]
+        red_color = (0, 0, 255)
+        size = 3
+
+        for i in range(-size, size + 1):
+            px = x + i
+            py = y
+            if 0 <= px < width and 0 <= py < height:
+                result[py, px] = red_color
+
+            px = x
+            py = y + i
+            if 0 <= px < width and 0 <= py < height:
+                result[py, px] = red_color
+
+        return result
+
+    def circle_detection(self, image: np.ndarray) -> np.ndarray:
+        """
+        Обнаружение окружностей с логированием.
+        """
+        self.logger.debug("Circle detection (Hough) started")
+        start_time = time.time()
+
+        try:
+            gray = self._rgb_to_grayscale(image)
+            edges = self.edge_detection(image)
+            edges_binary = (edges > 128)
+
+            height, width = gray.shape
+
+            min_radius = max(10, min(height, width) // 30)
+            max_radius = min(150, min(height, width) // 4)
+
+            self.logger.debug(f"Circle detection parameters: min_radius={min_radius}, max_radius={max_radius}")
+
+            edge_points = np.argwhere(edges_binary)
+
+            if len(edge_points) > 6000:
+                step = len(edge_points) // 6000
+                edge_points = edge_points[::step]
+
+            accumulator = np.zeros((height, width, max_radius - min_radius + 1), dtype=np.uint16)
+
+            for y, x in edge_points:
+                for r in range(min_radius, max_radius + 1):
+                    for angle in range(0, 360, 2):
+                        rad = math.radians(angle)
+                        a = int(x + r * math.cos(rad))
+                        b = int(y + r * math.sin(rad))
+                        if 0 <= a < width and 0 <= b < height:
+                            accumulator[b, a, r - min_radius] += 1
+
+            circles = []
+            vote_threshold = 0.22 * accumulator.max()
+
+            for r_idx, r in enumerate(range(min_radius, max_radius + 1)):
+                for y in range(height):
+                    for x in range(width):
+                        if accumulator[y, x, r_idx] > vote_threshold:
+                            circles.append((x, y, r, accumulator[y, x, r_idx]))
+
+            circles.sort(key=lambda x: x[3], reverse=True)
+
+            final_circles = []
+            for x, y, r, score in circles:
+                duplicate = False
+                for existing in final_circles:
+                    x2, y2, r2 = existing
+                    distance = math.sqrt((x - x2) ** 2 + (y - y2) ** 2)
+                    if distance < 25 and abs(r - r2) < max(5, r * 0.2):
+                        duplicate = True
+                        break
+
+                if not duplicate:
+                    final_circles.append((x, y, r))
+
+                if len(final_circles) >= 15:
+                    break
+
+            result_image = image.copy()
+            for x, y, r in final_circles:
+                result_image = self._draw_circle(result_image, x, y, r)
+
+            elapsed = time.time() - start_time
+            self.logger.debug(f"Circle detection completed in {elapsed:.4f} seconds. Found {len(final_circles)} circles")
+            return result_image
+        except Exception as e:
+            self.logger.error(f"Circle detection failed: {e}")
+            raise
+
+    def _draw_circle(self, image: np.ndarray, center_x: int, center_y: int,
+                     radius: int) -> np.ndarray:
+        """Рисует окружность с двойной обводкой для лучшей видимости."""
+        result = image.copy()
+        height, width = image.shape[:2]
+        green_color = (0, 255, 0)
+
+        for r_offset in range(-1, 2):
+            current_radius = radius + r_offset
+            for angle in np.linspace(0, 2 * np.pi, max(150, current_radius * 2)):
+                x = int(center_x + current_radius * np.cos(angle))
+                y = int(center_y + current_radius * np.sin(angle))
+                if 0 <= x < width and 0 <= y < height:
+                    result[y, x] = green_color
+
+        for angle in [0, 45, 90, 135, 180, 225, 270, 315]:
+            rad = math.radians(angle)
+            for r in range(radius - 2, radius + 3):
+                x = int(center_x + r * math.cos(rad))
+                y = int(center_y + r * math.sin(rad))
+                if 0 <= x < width and 0 <= y < height:
+                    result[y, x] = green_color
+
+        return result
+
+    def _gaussian_kernel(self, size: int, sigma: float) -> np.ndarray:
+        """Создает гауссово ядро."""
+        ax = np.linspace(-(size - 1) / 2., (size - 1) / 2., size)
+        xx, yy = np.meshgrid(ax, ax)
+        kernel = np.exp(-0.5 * (xx ** 2 + yy ** 2) / sigma ** 2)
+        return kernel / np.sum(kernel)
+
+    def convolution(self, image: np.ndarray, kernel: np.ndarray) -> np.ndarray:
+        """Публичный метод свёртки."""
+        return self._convolution(image, kernel)
+
+    def rgb_to_grayscale(self, image: np.ndarray) -> np.ndarray:
+        """Публичный метод преобразования в grayscale."""
+        return self._rgb_to_grayscale(image)
+
+    def gamma_correction(self, image: np.ndarray, gamma: float) -> np.ndarray:
+        """Публичный метод гамма-коррекции."""
+        return self._gamma_correction(image, gamma)
+
+    def library_edge_detection(self, image: np.ndarray) -> np.ndarray:
+        """Публичный метод для библиотечного edge detection (Canny)."""
+        return self.edge_detection(image)

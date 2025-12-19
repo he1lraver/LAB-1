@@ -1,0 +1,212 @@
+2025-12-19 20:44:15 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for cat API
+2025-12-19 20:44:15 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for dog API
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:291] - TEST 1: AsyncImageProcessor initialization
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:309] - [PASSED] AsyncImageProcessor initialization test
+2025-12-19 20:44:15 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for cat API
+2025-12-19 20:44:15 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for dog API
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:379] - TEST 4: Create image objects from metadata
+2025-12-19 20:44:15 - image_processor - DEBUG - [async_image_processor.py:156] - Creating image objects from 2 metadata entries
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:44:15 - image_processor - DEBUG - [async_image_processor.py:177] - Image object created for index 1 (breed: Siamese)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:44:15 - image_processor - DEBUG - [async_image_processor.py:177] - Image object created for index 2 (breed: Persian)
+2025-12-19 20:44:15 - image_processor - INFO - [async_image_processor.py:179] - Created 2 image objects
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:408] - [PASSED] Create image objects from metadata test
+2025-12-19 20:44:15 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for cat API
+2025-12-19 20:44:15 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for dog API
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:347] - TEST 3: ImageMetadata assignment
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:367] - [PASSED] ImageMetadata assignment test
+2025-12-19 20:44:15 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for cat API
+2025-12-19 20:44:15 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for dog API
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:321] - TEST 2: ImageMetadata creation
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:336] - [PASSED] ImageMetadata creation test
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:217] - TEST 5: Convolution operation
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:220] - Converting ColorCatImage to grayscale: Siamese
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:46] - RGB to grayscale conversion started. Image shape: (100, 100, 3)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:53] - RGB to grayscale conversion completed. Result shape: (100, 100)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100), url=http://example.com/cat.jpg...
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:30] - Convolution started. Image shape: (100, 100), kernel shape: (3, 3)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:36] - Convolution completed in 0.0002 seconds
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:239] - [PASSED] Convolution operation test
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:94] - TEST 2: Grayscale to Color conversion
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:247] - Converting GrayscaleCatImage to color: Persian
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100, 3), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:125] - [PASSED] Grayscale to Color conversion test
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:138] - TEST 3: Image addition operation
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Maine Coon, shape=(100, 100, 3), url=http://example.com/cat2.jpg...
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:141] - Addition operation started
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:166] - Addition operation completed. Result shape: (100, 100, 3)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese+Maine Coon, shape=(100, 100, 3), url=combined_Siamese...
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:164] - [PASSED] Image addition test
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:250] - TEST 6: Image dimensions
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:76] - Image dimensions: 100x100
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:263] - [PASSED] Image dimensions test
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:176] - TEST 4: Image subtraction operation
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Bengal, shape=(100, 100, 3), url=http://example.com/cat2.jpg...
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:173] - Subtraction operation started
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:198] - Subtraction operation completed. Result shape: (100, 100, 3)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese-Bengal, shape=(100, 100, 3), url=subtracted_Siamese...
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:201] - [PASSED] Image subtraction test
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:59] - TEST 1: RGB to Grayscale conversion
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:220] - Converting ColorCatImage to grayscale: Siamese
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:46] - RGB to grayscale conversion started. Image shape: (100, 100, 3)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:53] - RGB to grayscale conversion completed. Result shape: (100, 100)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100), url=http://example.com/cat.jpg...
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:82] - [PASSED] RGB to Grayscale conversion test
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:431] - TEST: Edge detection
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:120] - Edge detection (Canny) started
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:46] - RGB to grayscale conversion started. Image shape: (100, 100, 3)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:53] - RGB to grayscale conversion completed. Result shape: (100, 100)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:30] - Convolution started. Image shape: (100, 100), kernel shape: (3, 3)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:36] - Convolution completed in 0.0002 seconds
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:30] - Convolution started. Image shape: (100, 100), kernel shape: (3, 3)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:36] - Convolution completed in 0.0001 seconds
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:91] - Non-maximum suppression started
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:113] - Non-maximum suppression completed
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:139] - Edge detection completed in 0.0221 seconds
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:441] - [PASSED] Edge detection test
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:448] - TEST: RGB to grayscale
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:46] - RGB to grayscale conversion started. Image shape: (100, 100, 3)
+2025-12-19 20:44:15 - image_processor - DEBUG - [image_processing.py:53] - RGB to grayscale conversion completed. Result shape: (100, 100)
+2025-12-19 20:44:15 - image_processor - INFO - [tests.py:459] - [PASSED] RGB to grayscale test
+2025-12-19 20:56:22 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for cat API
+2025-12-19 20:56:22 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for dog API
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:291] - TEST 1: AsyncImageProcessor initialization
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:309] - [PASSED] AsyncImageProcessor initialization test
+2025-12-19 20:56:22 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for cat API
+2025-12-19 20:56:22 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for dog API
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:379] - TEST 4: Create image objects from metadata
+2025-12-19 20:56:22 - image_processor - DEBUG - [async_image_processor.py:156] - Creating image objects from 2 metadata entries
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:56:22 - image_processor - DEBUG - [async_image_processor.py:177] - Image object created for index 1 (breed: Siamese)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:56:22 - image_processor - DEBUG - [async_image_processor.py:177] - Image object created for index 2 (breed: Persian)
+2025-12-19 20:56:22 - image_processor - INFO - [async_image_processor.py:179] - Created 2 image objects
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:408] - [PASSED] Create image objects from metadata test
+2025-12-19 20:56:22 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for cat API
+2025-12-19 20:56:22 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for dog API
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:347] - TEST 3: ImageMetadata assignment
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:367] - [PASSED] ImageMetadata assignment test
+2025-12-19 20:56:22 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for cat API
+2025-12-19 20:56:22 - image_processor - DEBUG - [async_image_processor.py:44] - AsyncImageProcessor initialized for dog API
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:321] - TEST 2: ImageMetadata creation
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:336] - [PASSED] ImageMetadata creation test
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:217] - TEST 5: Convolution operation
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:220] - Converting ColorCatImage to grayscale: Siamese
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:46] - RGB to grayscale conversion started. Image shape: (100, 100, 3)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:53] - RGB to grayscale conversion completed. Result shape: (100, 100)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100), url=http://example.com/cat.jpg...
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:30] - Convolution started. Image shape: (100, 100), kernel shape: (3, 3)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:36] - Convolution completed in 0.0002 seconds
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:239] - [PASSED] Convolution operation test
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:94] - TEST 2: Grayscale to Color conversion
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:247] - Converting GrayscaleCatImage to color: Persian
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100, 3), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:125] - [PASSED] Grayscale to Color conversion test
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:138] - TEST 3: Image addition operation
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Maine Coon, shape=(100, 100, 3), url=http://example.com/cat2.jpg...
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:141] - Addition operation started
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:166] - Addition operation completed. Result shape: (100, 100, 3)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese+Maine Coon, shape=(100, 100, 3), url=combined_Siamese...
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:164] - [PASSED] Image addition test
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:250] - TEST 6: Image dimensions
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:76] - Image dimensions: 100x100
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:263] - [PASSED] Image dimensions test
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:176] - TEST 4: Image subtraction operation
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Bengal, shape=(100, 100, 3), url=http://example.com/cat2.jpg...
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:173] - Subtraction operation started
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:198] - Subtraction operation completed. Result shape: (100, 100, 3)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese-Bengal, shape=(100, 100, 3), url=subtracted_Siamese...
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:201] - [PASSED] Image subtraction test
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100, 3), url=http://example.com/cat.jpg...
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Persian, shape=(100, 100), url=http://example.com/cat_gray.jpg...
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:59] - TEST 1: RGB to Grayscale conversion
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:220] - Converting ColorCatImage to grayscale: Siamese
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:46] - RGB to grayscale conversion started. Image shape: (100, 100, 3)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:53] - RGB to grayscale conversion completed. Result shape: (100, 100)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - DEBUG - [abstract_image.py:35] - CatImage created: breed=Siamese, shape=(100, 100), url=http://example.com/cat.jpg...
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:82] - [PASSED] RGB to Grayscale conversion test
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:431] - TEST: Edge detection
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:120] - Edge detection (Canny) started
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:46] - RGB to grayscale conversion started. Image shape: (100, 100, 3)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:53] - RGB to grayscale conversion completed. Result shape: (100, 100)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:30] - Convolution started. Image shape: (100, 100), kernel shape: (3, 3)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:36] - Convolution completed in 0.0002 seconds
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:30] - Convolution started. Image shape: (100, 100), kernel shape: (3, 3)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:36] - Convolution completed in 0.0001 seconds
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:91] - Non-maximum suppression started
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:113] - Non-maximum suppression completed
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:139] - Edge detection completed in 0.0105 seconds
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:441] - [PASSED] Edge detection test
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:24] - ImageProcessing instance created
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:448] - TEST: RGB to grayscale
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:46] - RGB to grayscale conversion started. Image shape: (100, 100, 3)
+2025-12-19 20:56:22 - image_processor - DEBUG - [image_processing.py:53] - RGB to grayscale conversion completed. Result shape: (100, 100)
+2025-12-19 20:56:22 - image_processor - INFO - [tests.py:459] - [PASSED] RGB to grayscale test
