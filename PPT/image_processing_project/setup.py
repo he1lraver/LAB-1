@@ -13,6 +13,9 @@ setup(
         "opencv-python>=4.5.0",
         "aiohttp>=3.8.0",
         "aiofiles>=0.8.0",
-        "python-dotenv>=0.19.0"
+        "python-dotenv>=0.19.0",
+        "pandas>=2.0.0",
+        "matplotlib>=3.7.0",
+        "pyarrow>=12.0.0"
     ],
 )
