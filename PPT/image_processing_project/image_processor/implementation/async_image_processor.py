@@ -34,6 +34,13 @@ class AsyncImageProcessor:
     """
     Асинхронный процессор для загрузки изображений из API с логированием.
     """
+    @property
+    def baseurl(self) -> str:
+        return self._base_url
+
+    @property
+    def base_url(self) -> str:
+        return self._base_url
 
     def __init__(self, api_key: str, api_type: str = "cat"):
         """Инициализация процессора."""

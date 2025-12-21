@@ -11,3 +11,4 @@ results_async/
 test_images/
 .DS_Store
 Thumbs.db
+out/
